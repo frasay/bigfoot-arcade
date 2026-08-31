@@ -124,16 +124,17 @@ addEventListener('keydown',e=>{
   if(e.code==='KeyM'){muted=!muted;
     if(muted){humOff();music.pause();}
     else if(state==='PLAY')musicPlay();}
+  if(e.code==='KeyQ'){state='ATTRACT';reset(true);musicStop();}
 });
 addEventListener('pointerdown',e=>{e.preventDefault();press();},{passive:false});
 
 function spawnObstacle(){
   const r=Math.random(),diff=Math.min(1,dist/3000);
-  if(r<.62){
+  if(r<.50){
     obs.push({t:'log',x:500,r:rnd(9,12+diff*3),rot:0,passed:false});
-    if(diff>.4&&Math.random()<.35)
+    if(diff>.4&&Math.random()<.28)
       obs.push({t:'log',x:500+rnd(50,70),r:rnd(9,12),rot:0,passed:false});
-  }else if(r<.82)obs.push({t:'stump',x:500,w:18,h:rnd(18,24+diff*6),passed:false});
+  }else if(r<.75)obs.push({t:'stump',x:500,w:18,h:rnd(18,24+diff*6),passed:false});
   else obs.push({t:'rock',x:500,w:22,h:13,passed:false});
   spawnT=rnd(1.05,1.9)*Math.max(.55,1-diff*.45)*(220/(speed+70));
 }
@@ -349,13 +350,18 @@ function drawBird(b){
   else px(x-4,y+3,10,5,'#2a1422');
   px(x-2,f?y-5:y+2,8,2,'#552c40');
 }
-function drawUfo(u){const x=u.x,y=u.y+Math.sin(u.bob)*3;
-  g.fillStyle='rgba(125,255,176,.16)';
-  g.beginPath();g.moveTo(x-6,y+6);g.lineTo(x+6,y+6);g.lineTo(x+16,150);g.lineTo(x-16,150);g.fill();
-  px(x-9,y-10,18,7,'#2a4436');g.fillStyle='#7dffb0';g.beginPath();g.arc(x,y-6,8,Math.PI,0);g.fill();
-  px(x-20,y-4,40,7,'#e6ecf2');px(x-16,y+3,32,3,'#7a8694');
-  for(let k=0;k<4;k++){const on=Math.floor(t*6+k)%4===0;
-    px(x-14+k*9,y+4,3,2,on?'#ff4d4d':'#7a1a1a');}
+function drawUfo(u){
+  const x=u.x|0,y=(u.y+Math.sin(u.bob)*3)|0;
+  g.fillStyle='rgba(125,255,176,.12)';
+  g.beginPath();g.moveTo(x-8,y+8);g.lineTo(x+8,y+8);g.lineTo(x+20,150);g.lineTo(x-20,150);g.fill();
+  px(x-11,y-12,22,8,'#1a3a2a');
+  g.fillStyle='#5dff99';g.beginPath();g.arc(x,y-8,10,Math.PI,0);g.fill();
+  px(x-24,y-2,48,8,'#d4e8e0');px(x-20,y+6,40,4,'#6a8a80');
+  for(let k=0;k<5;k++){const on=Math.floor(t*7+k)%5===0;
+    px(x-16+k*8,y+7,4,3,on?'#ff6b4d':'#8a2a1a');}
+  g.strokeStyle='rgba(93,255,153,.4)';g.lineWidth=2;
+  g.beginPath();g.arc(x,y-8,12,Math.PI,0);g.stroke();
+  px(x-3,y-15,6,4,'#ffff99');px(x+7,y-10,4,3,'#ffff99');
 }
 function drawOrb(b){const r=6+Math.sin(b.pulse)*1.5;
   g.fillStyle='rgba(77,227,255,.25)';g.beginPath();g.arc(b.x,b.y,r+4,0,7);g.fill();
@@ -398,7 +404,7 @@ function draw(){
     text('STAY LOW WHEN NIGHT HAWKS SWOOP',240,142,'#ffb26b',8,true);
     text('DOUBLE JUMP TO CATCH UFO ORBS',240,156,'#4de3ff',8,true);
     text('FORCEFIELD PROTECTS YOU 10 SEC',240,170,'#4de3ff',8,true);
-    text('SPACE / TAP = JUMP    M = MUTE',240,190,'#ccc',8,true);
+    text('SPACE / TAP = JUMP    M = MUTE    Q = QUIT',240,190,'#ccc',8,true);
     if(Math.floor(blink*2)%2)text('INSERT COIN  -  PRESS ANY KEY',240,218,'#ff4d4d',10,true);
     text('HI-SCORE '+hi.toString().padStart(6,'0'),240,244,'#ff8c4d',8,true);
     if(musicOk===false)text('MUSIC.MP3 NOT FOUND - GAME STILL PLAYS',240,260,'#997766',7,true);
